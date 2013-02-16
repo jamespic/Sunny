@@ -26,12 +26,16 @@ public class SunnyActivity extends ListActivity
     public static final int REFRESH_DISTANCE = 10000;
     private static final int REFRESH_TIME = 5000;
     private SimpleAdapter adapter;
-    private Map<String, Object> duskMap;
     private List<Map<String, ?>> itemList;
+    private Map<String, Object> duskMap;
     private Map<String, Object> dawnMap;
-    private MyLocationListener listener = null;
     private Map<String, Object> sunriseMap;
     private Map<String, Object> sunsetMap;
+    private Map<String, Object> astroDawnMap;
+    private Map<String, Object> astroDuskMap;
+    private Map<String, Object> nauticalDawnMap;
+    private Map<String, Object> nauticalDuskMap;
+    private MyLocationListener listener = null;
     private LocationManager locMgr;
     
     /** Called when the activity is first created. */
@@ -50,6 +54,11 @@ public class SunnyActivity extends ListActivity
         sunriseMap = addItem("Sunrise", "Getting Location...");
         sunsetMap = addItem("Sunset", "Getting Location...");
         duskMap = addItem("Dusk", "Getting Location...");
+        astroDawnMap = addItem("Astronomical Dawn", "Getting Location...");
+        astroDuskMap = addItem("Astronomical Dusk", "Getting Location...");
+        nauticalDawnMap = addItem("Nautical Dawn", "Getting Location...");
+        nauticalDuskMap = addItem("Nautical Dusk", "Getting Location...");
+        
         
         locMgr =
                 (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -98,32 +107,53 @@ public class SunnyActivity extends ListActivity
         Calendar date = Calendar.getInstance(tz);
         boolean dst = tz.inDaylightTime(date.getTime());
         
+        //Y U NO REFACTOR INTO METHOD
         try {
-            Time riseTime = Sun.sunriseTime(date, latlong, tz, dst);
-            sunriseMap.put(LINE2, riseTime.toString());
-        } catch (IllegalArgumentException e) {
-            sunriseMap.put(LINE2, "Not today!");
+            sunriseMap.put(LINE2, Sun.sunriseTime(date, latlong, tz, dst).toString());
+        } catch (Exception e) {
+            sunriseMap.put(LINE2, "Not Today!");
         }
         
         try {
-            Time dawnTime = Sun.morningCivilTwilightTime(date, latlong, tz, dst);
-            dawnMap.put(LINE2, dawnTime.toString());
+            dawnMap.put(LINE2, Sun.morningCivilTwilightTime(date, latlong, tz, dst).toString());
         } catch (Exception e) {
             dawnMap.put(LINE2, "Not Today!");
         }
         
         try {
-            Time setTime = Sun.sunsetTime(date, latlong, tz, dst);
-            sunsetMap.put(LINE2, setTime.toString());
+            sunsetMap.put(LINE2, Sun.sunsetTime(date, latlong, tz, dst).toString());
         } catch (Exception e) {
             sunsetMap.put(LINE2, "Not Today!");
         }
         
         try {
-            Time duskTime = Sun.eveningCivilTwilightTime(date, latlong, tz, dst);
-            duskMap.put(LINE2, duskTime.toString());
+            duskMap.put(LINE2, Sun.eveningCivilTwilightTime(date, latlong, tz, dst).toString());
         } catch (Exception e) {
             duskMap.put(LINE2, "Not Today!");
+        }
+        
+        try {
+            astroDawnMap.put(LINE2, Sun.morningAstronomicalTwilightTime(date, latlong, tz, dst).toString());
+        } catch (Exception e) {
+            astroDawnMap.put(LINE2, "Not Today!");
+        }
+        
+        try {
+            astroDuskMap.put(LINE2, Sun.eveningAstronomicalTwilightTime(date, latlong, tz, dst).toString());
+        } catch (Exception e) {
+            astroDuskMap.put(LINE2, "Not Today!");
+        }
+        
+        try {
+            nauticalDawnMap.put(LINE2, Sun.morningNauticalTwilightTime(date, latlong, tz, dst).toString());
+        } catch (Exception e) {
+            nauticalDawnMap.put(LINE2, "Not Today!");
+        }
+        
+        try {
+            nauticalDuskMap.put(LINE2, Sun.eveningNauticalTwilightTime(date, latlong, tz, dst).toString());
+        } catch (Exception e) {
+            nauticalDuskMap.put(LINE2, "Not Today!");
         }
     }
     
