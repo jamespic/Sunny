@@ -18,7 +18,6 @@ import java.util.TimeZone;
 import uk.me.jstott.coordconv.LatitudeLongitude;
 import uk.me.jstott.sun.Sun;
 import uk.me.jstott.sun.Time;
-import static android.os.Looper.getMainLooper;
 
 public class SunnyActivity extends ListActivity
 {
@@ -78,10 +77,10 @@ public class SunnyActivity extends ListActivity
         }
         listener = new MyLocationListener();
         
-        locMgr.requestSingleUpdate(provider, listener, getMainLooper());
+        locMgr.requestSingleUpdate(provider, listener, null);
         
         locMgr.requestLocationUpdates(
-                provider, REFRESH_TIME, REFRESH_DISTANCE, listener, getMainLooper());
+                provider, REFRESH_TIME, REFRESH_DISTANCE, listener);
         
         setListAdapter(adapter);
     }
@@ -158,6 +157,8 @@ public class SunnyActivity extends ListActivity
         } catch (Exception e) {
             nauticalDuskMap.put(LINE2, "Not Today!");
         }
+        
+        adapter.notifyDataSetChanged();
     }
     
     private class MyLocationListener implements LocationListener {
