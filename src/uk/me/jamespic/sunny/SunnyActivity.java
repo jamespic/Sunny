@@ -18,12 +18,13 @@ import java.util.TimeZone;
 import uk.me.jstott.coordconv.LatitudeLongitude;
 import uk.me.jstott.sun.Sun;
 import uk.me.jstott.sun.Time;
+import static android.os.Looper.getMainLooper;
 
 public class SunnyActivity extends ListActivity
 {
     public static final String LINE1 = "line1";
     public static final String LINE2 = "line2";
-    public static final int REFRESH_DISTANCE = 10000;
+    public static final float REFRESH_DISTANCE = 10000.0f;
     private static final int REFRESH_TIME = 5000;
     private SimpleAdapter adapter;
     private List<Map<String, ?>> itemList;
@@ -77,8 +78,10 @@ public class SunnyActivity extends ListActivity
         }
         listener = new MyLocationListener();
         
+        locMgr.requestSingleUpdate(provider, listener, getMainLooper());
+        
         locMgr.requestLocationUpdates(
-                provider, REFRESH_TIME, REFRESH_DISTANCE, listener);
+                provider, REFRESH_TIME, REFRESH_DISTANCE, listener, getMainLooper());
         
         setListAdapter(adapter);
     }
